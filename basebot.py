@@ -144,28 +144,27 @@ def format_delta(delta, fractions=True):
     needed, so the result for 3600 would be "1h". As a special case, the
     result for 0 is "0s" (instead of nothing).
     """
-    if not fractions:
-        delta = int(delta)
-    if delta == 0: return '0s'
-    ret = []
-    if delta < 0:
-        ret.append('-')
-        delta = -delta
-    if delta >= 86400:
-        ret.append('%dd' % (delta // 86400))
-        delta %= 86400
-    if delta >= 3600:
-        ret.append('%dh' % (delta // 3600))
-        delta %= 3600
-    if delta >= 60:
-        ret.append('%dm' % (delta // 60))
-        delta %= 60
-    if delta != 0:
-        if delta % 1 != 0:
+    if delta == 0:
+      return '0s'
+    else:
+        ret = []
+        if delta < 0:
+            ret.append('-')
+            delta = -delta
+        if delta >= 86400:
+            ret.append('%dd' % (delta // 86400))
+            delta %= 86400
+        if delta >= 3600:
+            ret.append('%dh' % (delta // 3600))
+            delta %= 3600
+        if delta >= 60:
+            ret.append('%dm' % (delta // 60))
+            delta %= 60
+        if delta % 1 != 0 and fractions:
             ret.append('%ss' % round(delta, 3))
         else:
             ret.append('%ds' % delta)
-    return ' '.join(ret)
+        return ' '.join(ret)
 
 def spawn_thread(_target, *_args, **_kwds):
     """
