@@ -148,6 +148,7 @@ def format_delta(delta, fractions=True):
       return '0s'
     else:
         ret = []
+        
         if delta < 0:
             ret.append('-')
             delta = -delta
@@ -160,10 +161,13 @@ def format_delta(delta, fractions=True):
         if delta >= 60:
             ret.append('%dm' % (delta // 60))
             delta %= 60
-        if delta % 1 != 0 and fractions:
-            ret.append('%ss' % round(delta, 3))
+        if fractions:
+            if delta % 1 != 0:
+                ret.append('%ss' % round(delta, 3))
+            else:
+                ret.append('%ds' % delta)
         else:
-            ret.append('%ds' % delta)
+            ret.append('%ds' % round(delta))
         return ' '.join(ret)
 
 def spawn_thread(_target, *_args, **_kwds):
