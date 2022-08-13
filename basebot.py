@@ -147,6 +147,9 @@ def format_delta(delta, fractions=True):
     if delta == 0:
       return '0s'
     else:
+        #sizes = {"d":86400, "h":3600, "m":60, "s":1}
+        #for day in sizes:#don't know why iterating through dictionaries is weird
+            
         ret = []
         
         if delta < 0:
