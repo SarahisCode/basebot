@@ -147,28 +147,22 @@ def format_delta(delta, fractions=True):
     if delta == 0:
       return '0s'
     else:
-        #sizes = {"d":86400, "h":3600, "m":60, "s":1}
-        #for day in sizes:#don't know why iterating through dictionaries is weird
-            
         ret = []
         
         if delta < 0:
             ret.append('-')
             delta = -delta
-        if delta >= 86400:
-            ret.append('%dd' % (delta // 86400))
-            delta %= 86400
-        if delta >= 3600:
-            ret.append('%dh' % (delta // 3600))
-            delta %= 3600
-        if delta >= 60:
-            ret.append('%dm' % (delta // 60))
-            delta %= 60
+        sizes = {"d":86400, "h":3600, "m":60}
+        for day in sizes:#don't know why iterating through dictionaries is weird
+            unit_size = sizes[day]
+            if delta > unit_size:
+                ret.append('%d' % (delta // unit_size) + day)
+                delta %= unit_size
         if fractions:
-            if delta % 1 != 0:
-                ret.append('%ss' % round(delta, 3))
-            else:
+            if delta % 1 == 0:
                 ret.append('%ds' % delta)
+            else:
+                ret.append('%ss' % round(delta, 3))
         else:
             ret.append('%ds' % round(delta))
         return ' '.join(ret)
