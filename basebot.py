@@ -144,28 +144,24 @@ def format_delta(delta, fractions=True):
     needed, so the result for 3600 would be "1h". As a special case, the
     result for 0 is "0s" (instead of nothing).
     """
-    if delta == 0:
-      return '0s'
-    else:
-        ret = []
+    ret = []
         
-        if delta < 0:
-            ret.append('-')
-            delta = -delta
-        sizes = {"d":86400, "h":3600, "m":60}
-        for day in sizes:#don't know why iterating through dictionaries is weird
-            unit_size = sizes[day]
-            if delta > unit_size:
-                ret.append('%d' % (delta // unit_size) + day)
-                delta %= unit_size
-        if fractions:
-            if delta % 1 == 0:
-                ret.append('%ds' % delta)
-            else:
-                ret.append('%ss' % round(delta, 3))
+    if delta < 0:
+        ret.append('-')
+        delta = -delta
+    sizes = (("d",86400), ("h",3600), ("m",60))
+    for day, unit_size in sizes:
+        if delta > unit_size:
+            ret.append('%d' % (delta // unit_size) + day)
+            delta %= unit_size
+    if fractions:
+        if delta % 1 == 0:
+            ret.append('%ds' % delta)
         else:
-            ret.append('%ds' % round(delta))
-        return ' '.join(ret)
+            ret.append('%ss' % round(delta, 3))
+    else:
+        ret.append('%ds' % int(delta))
+    return ' '.join(ret)
 
 def spawn_thread(_target, *_args, **_kwds):
     """
