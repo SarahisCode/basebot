@@ -146,17 +146,17 @@ def format_delta(delta, fractions=True):
     needed, so the result for 3600 would be "1h". As a special case, the
     result for 0 is "0s" (instead of nothing).
     """
+    UNIT_DURATIONS = (("d",86400), ("h",3600), ("m",60))
     ret = []
         
     if delta < 0:
         ret = ret.append("-")
         delta = -delta
-    sizes = (("d",86400), ("h",3600), ("m",60))
-    for unit, unit_size in sizes:
-        if delta > unit_size:
-            ret.append('%d' % (delta // unit_size) + unit)
+    for unit, unit_duration in UNIT_DURATIONS:
+        if delta > unit_duration:
+            ret.append('%d' % (delta // unit_duration) + unit)
             ret.append(" ")
-            delta %= unit_size
+            delta %= unit_duration
     if delta != 0:
         if fractions:
             if delta % 1 == 0:
