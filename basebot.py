@@ -155,15 +155,19 @@ def format_delta(delta, fractions=True):
     for unit, unit_size in sizes:
         if delta > unit_size:
             ret.append('%d' % (delta // unit_size) + unit)
+            ret.append(" ")
             delta %= unit_size
-    if fractions:
-        if delta % 1 == 0:
-            ret.append('%ds' % delta)
+    if delta != 0:
+        if fractions:
+            if delta % 1 == 0:
+                ret.append('%ds' % delta)
+            else:
+                ret.append('%ss' % round(delta, 3))
         else:
-            ret.append('%ss' % round(delta, 3))
-    else:
-        ret.append('%ds' % int(delta))
-    return " ".join(ret)
+            ret.append('%ds' % int(delta))
+    elif ret == []:
+        ret.append("0s")
+    return "".join(ret)
 
 def spawn_thread(_target, *_args, **_kwds):
     """
