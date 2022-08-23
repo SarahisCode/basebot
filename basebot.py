@@ -134,14 +134,14 @@ def format_datetime(timestamp, fractions=True):
         ts += '.%03d' % (int(timestamp * 1000) % 1000)
     return ts + ' UTC'
 
-def format_delta(delta, fractions=True):
+def format_delta(delta, decimals=True):
     """
-    format_delta(delta, fractions=True) -> str
+    format_delta(delta, decimals=True) -> str
 
     Format a time difference. delta is a numeric value holding the time
     difference to be formatted in seconds. The return value is composed
-    like that: "[- ][Xd ][Xh ][Xm ][X[.FFF]s]", with the brackets indicating
-    possible omission. If fractions is False, or the given time is an
+    like that: "[- ][Xd ][Xh ][Xm ][X[.DDD]s]", with the brackets indicating
+    possible omission. If decimals is False, or the given time is an
     integer, the fractional part is omitted. All components are included as
     needed, so the result for 3600 would be "1h". As a special case, the
     result for 0 is "0s" (instead of nothing).
@@ -156,16 +156,25 @@ def format_delta(delta, fractions=True):
             ret.append('%d' % (delta // unit_duration) + unit)
             delta %= unit_duration
     if delta != 0:
-        if fractions:
-            if delta % 1 == 0:
-                ret.append('%ds' % delta)
-            else:
-                ret.append('%ss' % round(delta, 3))
-        else:
-            ret.append('%ds' % int(delta))
+        ret.append(format_seconds(delta, decimals))
     elif ret == []:
         ret.append("0s")
     return " ".join(ret)
+
+def format_seconds(delta, decimals):
+    if decimals:
+        return format_decimal_seconds(delta)
+    else:
+        return format_integer_seconds(delta)
+
+def format_integer_seconds(delta):
+    return "%ds" % round(delta)
+
+def format_decimal_seconds(delta):
+    if delta % 1 == 0:
+         return '%ds' % int(delta)
+    else:
+         return '%ss' % round(delta, 3)
 
 def spawn_thread(_target, *_args, **_kwds):
     """
