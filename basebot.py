@@ -147,6 +147,10 @@ def format_delta(delta, decimals=True):
     result for 0 is "0s" (instead of nothing).
     """
     ret = []
+    if decimals:
+        delta = round(delta, 3)
+    else:
+        delta = round(delta)
         
     if delta < 0:
         ret = ret.append("-")
@@ -156,25 +160,16 @@ def format_delta(delta, decimals=True):
             ret.append('%d' % (delta // unit_duration) + unit)
             delta %= unit_duration
     if delta != 0:
-        ret.append(format_seconds(delta, decimals))
+        ret.append(format_seconds(delta))
     elif ret == []:
         ret.append("0s")
     return " ".join(ret)
 
-def format_seconds(delta, decimals):
-    if decimals:
-        return format_decimal_seconds(delta)
-    else:
-        return format_integer_seconds(delta)
-
-def format_integer_seconds(delta):
-    return "%ds" % round(delta)
-
-def format_decimal_seconds(delta):
+def format_seconds(delta):
     if delta % 1 == 0:
-         return '%ds' % int(delta)
+        return "%ds" % delta
     else:
-         return '%ss' % round(delta, 3)
+        return "%ss" % delta
 
 def spawn_thread(_target, *_args, **_kwds):
     """
