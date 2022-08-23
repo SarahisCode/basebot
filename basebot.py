@@ -146,16 +146,14 @@ def format_delta(delta, fractions=True):
     needed, so the result for 3600 would be "1h". As a special case, the
     result for 0 is "0s" (instead of nothing).
     """
-    UNIT_DURATIONS = (("d",86400), ("h",3600), ("m",60))
     ret = []
         
     if delta < 0:
         ret = ret.append("-")
         delta = -delta
-    for unit, unit_duration in UNIT_DURATIONS:
+    for unit, unit_duration in (("d",86400), ("h",3600), ("m",60)):
         if delta > unit_duration:
             ret.append('%d' % (delta // unit_duration) + unit)
-            ret.append(" ")
             delta %= unit_duration
     if delta != 0:
         if fractions:
@@ -167,7 +165,7 @@ def format_delta(delta, fractions=True):
             ret.append('%ds' % int(delta))
     elif ret == []:
         ret.append("0s")
-    return "".join(ret)
+    return " ".join(ret)
 
 def spawn_thread(_target, *_args, **_kwds):
     """
